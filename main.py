@@ -13,6 +13,6 @@ data['date'] = pd.to_datetime(data['date'])
 data['time'] = data['date'].dt.strftime("%H")
 data['date'] = data['date'].dt.strftime("%d/%m/%Y")
 
-df2 = data.groupby(['date','time']).sum()
+data2 = data.groupby(['date','time']).sum()
 
 data3 = pd.read_csv('kindex.txt', header=None, delimiter=r'\s+', names='year month date hour value1 value2 value3 Kp value4 value5'.split(' '))
