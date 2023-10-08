@@ -1,8 +1,13 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error
+from math import sqrt
+from keras.models import Sequential
+from keras.layers import LSTM, Dense
 
 final_data = pd.read_csv("Final_Data_for_Model_training.csv")
 
@@ -20,7 +25,7 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(1)  # Output layer with one unit for regression
 ])
 
-model.compile(loss='mse', optimizer='adam')
+model.compile(loss='mean_absolute_error', optimizer='rmsprop')
 
 model.fit(X_train_reshaped, y_train, epochs=50, batch_size=32, validation_data=(X_test_reshaped, y_test))
 
