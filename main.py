@@ -1,18 +1,8 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-<<<<<<< HEAD
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-=======
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error
-from math import sqrt
-from keras.models import Sequential
-from keras.layers import LSTM, Dense
->>>>>>> d2d7e4f35532e3602c573b9d45c468bb36f33df2
 
 final_data = pd.read_csv("Final_Data_for_Model_training.csv")
 
@@ -29,7 +19,6 @@ model = tf.keras.Sequential([
     tf.keras.layers.LSTM(32),
     tf.keras.layers.Dense(1)  # Output layer with one unit for regression
 ])
-<<<<<<< HEAD
 
 model.compile(loss='mse', optimizer='adam')
 
@@ -49,21 +38,3 @@ plt.show()
 
 model.save('DSCOVR')
 
-=======
-
-model.compile(loss='mean_absolute_error', optimizer='rmsprop')
-
-model.fit(X_train_reshaped, y_train, epochs=50, batch_size=32, validation_data=(X_test_reshaped, y_test))
-
-y_pred = model.predict(X_test_reshaped)
-
-plt.figure(figsize=(12, 6))
-plt.plot(final_data.index[-len(y_test):], y_test, label='Real Kp Values', color='blue')
-plt.plot(final_data.index[-len(y_test):], y_pred, label='Predicted Kp Values', color='red')
-plt.xlabel('Timestamp')
-plt.ylabel('Kp Value')
-plt.legend()
-plt.grid(True)
-plt.title('Real vs. Predicted Kp Values (Test Period)')
-plt.show()
->>>>>>> d2d7e4f35532e3602c573b9d45c468bb36f33df2
