@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forecasting Prediction</title>
+</head>
+<body>
+
+<h2>Enter Features</h2>
+<form action="/predict" method="post">
+    <!-- Create input fields based on the number of features -->
+    <input type="text" name="feature_1" placeholder="Feature 1" required><br>
+    <input type="text" name="feature_2" placeholder="Feature 2" required><br>
+    <!-- ... Add more inputs for other features ... -->
+    <input type="submit" value="Predict">
+</form>
+
+{% if prediction %}
+<p>Predicted Value: {{ prediction }}</p>
+{% endif %}
+
+</body>
+</html>
