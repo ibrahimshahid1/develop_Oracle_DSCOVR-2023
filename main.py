@@ -1,18 +1,37 @@
-import pandas as pd
 import numpy as np
-from datetime import datetime
+import pandas as pd
+import tensorflow as tf
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 
-data = pd.read_csv("dsc_fc_summed_spectra_2023_v01.csv")
+final_data = pd.read_csv("Final_Data_for_Model_training.csv")
 
-data['vector1'] = pd.to_numeric(data['vector1'])
-data['vector2'] = pd.to_numeric(data['vector2'])
-data['vector3'] = pd.to_numeric(data['vector3'])
+features = final_data.iloc[:, 2:].values
+target = final_data['Kp'].values
 
-data['date'] = pd.to_datetime(data['date'])
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
 
-data['time'] = data['date'].dt.strftime("%H")
-data['date'] = data['date'].dt.strftime("%d/%m/%Y")
+X_train_reshaped = X_train.reshape(X_train.shape[0], X_train.shape[1], 1)
+X_test_reshaped = X_test.reshape(X_test.shape[0], X_test.shape[1], 1)
 
-data2 = data.groupby(['date','time']).sum()
+model = tf.keras.Sequential([
+    tf.keras.layers.LSTM(128, input_shape=(X_train.shape[1], 1), return_sequences=True),
+    tf.keras.layers.LSTM(32),
+    tf.keras.layers.Dense(1)  # Output layer with one unit for regression
+])
 
-data3 = pd.read_csv('kindex.txt', header=None, delimiter=r'\s+', names='year month date hour value1 value2 value3 Kp value4 value5'.split(' '))
+model.compile(loss='mse', optimizer='adam')
+
+model.fit(X_train_reshaped, y_train, epochs=50, batch_size=32, validation_data=(X_test_reshaped, y_test))
+
+y_pred = model.predict(X_test_reshaped)
+
+plt.figure(figsize=(12, 6))
+plt.plot(final_data.index[-len(y_test):], y_test, label='Real Kp Values', color='blue')
+plt.plot(final_data.index[-len(y_test):], y_pred, label='Predicted Kp Values', color='red')
+plt.xlabel('Timestamp')
+plt.ylabel('Kp Value')
+plt.legend()
+plt.grid(True)
+plt.title('Real vs. Predicted Kp Values (Test Period)')
+plt.show()
